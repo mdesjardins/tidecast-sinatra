@@ -1,63 +1,5 @@
 require 'sinatra/base'
-require "sinatra/json"
-require 'data_mapper'
-require 'dm-serializer'
-
-DataMapper::Logger.new($stdout, :debug)
-DataMapper.setup(:default, 'postgres://mdesjardins:@localhost/tidecast_development')
-
-##### models
-
-class State
-  include DataMapper::Resource
-  has n, :regions
-  property :id, Serial
-  property :abbrev, String
-  property :full_name, String
-end
-
-class Region
-  include DataMapper::Resource
-  belongs_to :state
-  property :id, Serial
-  property :name, String
-end
-
-class Station
-  include DataMapper::Resource
-  belongs_to :state
-  belongs_to :region
-  property :id, Serial
-  property :station_code, String
-  property :sec_station_code, String
-  property :longitude, Float
-  property :latitude, Float
-  property :name, String
-  property :thh, String
-  property :thm, String
-  property :ths, String
-  property :tlh, String
-  property :tlm, String
-  property :tls, String
-  property :hh, String
-  property :hl, String
-  property :legacy_id, String
-  property :timezone, String
-  property :zone, String
-  property :nws_office, String
-  property :enabled, Integer
-end
-
-class ForecastUrl
-  include DataMapper::Resource
-  property :id, Serial
-  property :nws_office, String
-  property :url, String
-end
-
-DataMapper.finalize
-
-##### app
+require File.join(File.dirname(__FILE__), 'config', 'environment.rb')
 
 class App < Sinatra::Base
   helpers Sinatra::JSON
@@ -95,6 +37,7 @@ class App < Sinatra::Base
   end
 
   get "/station/:station_id/tides" do
+    Noaa::Tides.get_tides(Station.first(:id => params[:station_id]), Date.today)
   end
 
   get "/station/:station_id/forecast" do
