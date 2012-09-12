@@ -72,4 +72,15 @@ class ForecastUrl
   property :url, String
 end
 
+class CachedTide
+  include DataMapper::Resource
+  belongs_to :station
+  property :id, Serial
+  property :date, Date
+  property :time_of_day, String
+  property :height, Decimal, :precision => 8, :scale => 2
+  property :is_low_tide, Boolean
+  property :updated_at, DateTime
+end
 DataMapper.finalize
+#DataMapper::Model.raise_on_save_failure = true
