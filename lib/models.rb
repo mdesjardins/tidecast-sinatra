@@ -1,5 +1,6 @@
 DataMapper::Logger.new($stdout, :debug)
-DataMapper.setup(:default, 'postgres://mdesjardins:@localhost/tidecast_development')
+DataMapper.setup(:default, ENV['DATABASE_URL'] || 'postgres://mdesjardins:@localhost/tidecast_development')
+
 
 ##### models
 
@@ -61,7 +62,6 @@ class Station
       end
     end
     result
-    #result.gsub(/\w/,'+')
   end
 end
 
@@ -82,5 +82,7 @@ class CachedTide
   property :is_low_tide, Boolean
   property :updated_at, DateTime
 end
+
 DataMapper.finalize
-#DataMapper::Model.raise_on_save_failure = true
+DataMapper.auto_upgrade!
+DataMapper::Model.raise_on_save_failure = true
