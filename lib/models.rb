@@ -1,5 +1,5 @@
 DataMapper::Logger.new($stdout, :debug)
-DataMapper.setup(:default, ENV['DATABASE_URL'] || 'postgres://mdesjardins:@localhost/tidecast_development')
+DataMapper.setup(:default, ENV['DATABASE_URL'] || 'postgres://mdesjardins:@localhost/tidecast_dev')
 
 
 ##### models
